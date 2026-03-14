@@ -1,5 +1,6 @@
-const interviewList = [];
-const rejectedList = [];
+let interviewList = [];
+let rejectedList = [];
+let currentStatus = "all";
 
 // step-1
 const allCards = document.getElementById("All-cards");
@@ -8,6 +9,8 @@ const allCards = document.getElementById("All-cards");
 const totalCountPart = document.getElementById("totalCount");
 const interviewCountPart = document.getElementById("interviewCount");
 const rejectedCountPart = document.getElementById("rejectedCount");
+const filterSection = document.getElementById("filtered");
+const mainContainer = document.getElementById("main");
 
 // interviewList.push({ name: 1 }, { name: 1 }, { name: 1 });
 
@@ -35,23 +38,26 @@ function clicked(id) {
   rejectedFilterBtn.classList.add("bg-white", "text-black");
 
   let selected = document.getElementById(id);
+  currentStatus = id;
   selected.classList.remove("bg-white", "text-black");
   selected.classList.add("bg-blue-500", "text-white");
 
   if (id == "interview-filter-btn") {
     allCards.classList.add("hidden");
     filterSection.classList.remove("hidden");
+    renderInterview();
   } else if (id == "All-filter-btn") {
     allCards.classList.remove("hidden");
     filterSection.classList.add("hidden");
   } else if (id == "rejected-filter-btn") {
     allCards.classList.add("hidden");
     filterSection.classList.remove("hidden");
+    renderRejected();
   }
 }
 
 // step-5(using event deligation create an object for all information gatharing  and push the object within an array )
-const mainContainer = document.getElementById("main");
+
 mainContainer.addEventListener("click", function (event) {
   // console.log(event.target.classList.contains("interview-btn"));
   if (event.target.classList.contains("interview-btn")) {
@@ -89,8 +95,9 @@ mainContainer.addEventListener("click", function (event) {
     );
     calculateCount();
     // console.log(interviewList);
-
-    renderInterview();
+    if (currentStatus == "rejected-filter-btn") {
+      renderRejected();
+    }
   } else if (event.target.classList.contains("rejected-btn")) {
     const parentNode = event.target.parentNode.parentNode;
     const companyPart = parentNode.querySelector(".companyName").innerText;
@@ -120,14 +127,19 @@ mainContainer.addEventListener("click", function (event) {
     if (!validation) {
       rejectedList.push(objectInfo);
     }
+
+    interviewList = interviewList.filter(
+      (item) => item.companyPart != objectInfo.companyPart,
+    );
+
+    if (currentStatus == "interview-filter-btn") {
+      renderInterview();
+    }
     calculateCount();
     // console.log(interviewList);
-
-    renderRejected();
   }
 });
 
-const filterSection = document.getElementById("filtered");
 function renderInterview() {
   filterSection.innerHTML = "";
   for (let interview of interviewList) {
@@ -142,8 +154,8 @@ function renderInterview() {
  <p class="flowChange bg-sky-100 w-[120px] px-4 py-2 ">Not Applied</p>
  <p class="description text-gray-700">${interview.descriptionPart}</p>
  <div>
-    <button class="border-2 border-green-400 px-4 py-2 rounded-[5px] text-green-500">Interview</button>
-    <button class="border-2 border-red-400 px-4 py-2 rounded-[5px] text-red-500">Rejected</button>
+    <button class="interview-btn border-2 border-green-400 px-4 py-2 rounded-[5px] text-green-500">Interview</button>
+    <button class="rejected-btn border-2 border-red-400 px-4 py-2 rounded-[5px] text-red-500">Rejected</button>
  </div>
             </div>
             
@@ -167,8 +179,8 @@ function renderRejected() {
  <p class="flowChange bg-sky-100 w-[120px] px-4 py-2 ">Not Applied</p>
  <p class="description text-gray-700">${rejected.descriptionPart}</p>
  <div>
-    <button class="border-2 border-green-400 px-4 py-2 rounded-[5px] text-green-500">Interview</button>
-    <button class="border-2 border-red-400 px-4 py-2 rounded-[5px] text-red-500">Rejected</button>
+    <button class="interview-btn border-2 border-green-400 px-4 py-2 rounded-[5px] text-green-500">Interview</button>
+    <button class="rejected-btn border-2 border-red-400 px-4 py-2 rounded-[5px] text-red-500">Rejected</button>
  </div>
             </div>
             
