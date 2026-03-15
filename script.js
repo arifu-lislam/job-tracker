@@ -11,7 +11,7 @@ const interviewCountPart = document.getElementById("interviewCount");
 const rejectedCountPart = document.getElementById("rejectedCount");
 const filterSection = document.getElementById("filtered");
 const mainContainer = document.getElementById("main");
-
+const noContent = document.getElementById("noContent");
 // interviewList.push({ name: 1 }, { name: 1 }, { name: 1 });
 
 // step-3
@@ -60,6 +60,9 @@ function clicked(id) {
 
 mainContainer.addEventListener("click", function (event) {
   // console.log(event.target.classList.contains("interview-btn"));
+  const clickElement = event.target;
+  const card = clickElement.closest(".card");
+  const parent = card.parentNode;
   if (event.target.classList.contains("interview-btn")) {
     const parentNode = event.target.parentNode.parentNode;
     const companyPart = parentNode.querySelector(".companyName").innerText;
@@ -99,6 +102,7 @@ mainContainer.addEventListener("click", function (event) {
       renderRejected();
     }
   } else if (event.target.classList.contains("rejected-btn")) {
+    console.log("Ariful");
     const parentNode = event.target.parentNode.parentNode;
     const companyPart = parentNode.querySelector(".companyName").innerText;
     const positionPart = parentNode.querySelector(".position").innerText;
@@ -138,13 +142,19 @@ mainContainer.addEventListener("click", function (event) {
     calculateCount();
     // console.log(interviewList);
   }
+
+  // delete section
+  else if (event.target.classList.contains("delete-btn")) {
+    parent.removeChild(card);
+    calculateCount();
+  }
 });
 
 function renderInterview() {
   filterSection.innerHTML = "";
   for (let interview of interviewList) {
     let div = document.createElement("div");
-    div.className = "bg-white p-7 flex justify-between mb-5";
+    div.className = "card bg-white p-7 flex justify-between mb-5";
     div.innerHTML = `
     
             <div class="space-y-4">
@@ -159,8 +169,9 @@ function renderInterview() {
  </div>
             </div>
             
-            <div><i class="fa-regular fa-trash-can"></i></div>
-
+            <div >
+                <button class="delete-btn border-2 border-green-400 px-4 py-2 rounded-[5px] text-black bg-emerald-100">delete</button>
+            </div>
    `;
     filterSection.appendChild(div);
   }
@@ -169,7 +180,7 @@ function renderRejected() {
   filterSection.innerHTML = "";
   for (let rejected of rejectedList) {
     let div = document.createElement("div");
-    div.className = "bg-white p-7 flex justify-between mb-5";
+    div.className = "card bg-white p-7 flex justify-between mb-5";
     div.innerHTML = `
     
             <div class="space-y-4">
@@ -184,7 +195,9 @@ function renderRejected() {
  </div>
             </div>
             
-            <div><i class="fa-regular fa-trash-can"></i></div>
+            <div >
+                <button class="delete-btn border-2 border-green-400 px-4 py-2 rounded-[5px] text-black bg-emerald-100">delete</button>
+            </div>
 
    `;
     filterSection.appendChild(div);
